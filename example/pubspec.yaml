@@ -36,9 +36,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_chat_types: 
-    git:
-      url: https://github.com/jordandevogelaere/flutter_chat_types_htelecom.git
-      ref: main # branch name
+    path: ../../flutter_chat_types_htelecom
   flutter_chat_ui:
     path: ../
   http: ^0.13.5

@@ -25,9 +25,7 @@ dependencies:
   url_launcher: ^6.1.6
   visibility_detector: ^0.3.3
   flutter_chat_types: 
-    git:
-      url: https://github.com/jordandevogelaere/flutter_chat_types_htelecom.git
-      ref: main # branch name
+    path: ../flutter_chat_types_htelecom
 
 dev_dependencies:
   dart_code_metrics: ^4.21.3
