@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_link_previewer/flutter_link_previewer.dart'
-    show LinkPreview, regexEmail, regexLink;
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -42,8 +40,7 @@ class TextMessage extends StatelessWidget {
   final Widget Function(String userId)? nameBuilder;
 
   /// See [LinkPreview.onPreviewDataFetched].
-  final void Function(types.TextMessage, types.PreviewData)?
-      onPreviewDataFetched;
+  final void Function(types.TextMessage, types.PreviewData)? onPreviewDataFetched;
 
   /// Customisation options for the [TextMessage].
   final TextMessageOptions options;
@@ -59,21 +56,20 @@ class TextMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final enlargeEmojis =
-        emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
-            isConsistsOfEmojis(emojiEnlargementBehavior, message);
+    final enlargeEmojis = emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
+        isConsistsOfEmojis(emojiEnlargementBehavior, message);
     final theme = InheritedChatTheme.of(context).theme;
     final user = InheritedUser.of(context).user;
     final width = MediaQuery.of(context).size.width;
 
-    if (usePreviewData && onPreviewDataFetched != null) {
+    /*if (usePreviewData && onPreviewDataFetched != null) {
       final urlRegexp = RegExp(regexLink, caseSensitive: false);
       final matches = urlRegexp.allMatches(message.text);
 
       if (matches.isNotEmpty) {
         return _linkPreview(user, width, context);
       }
-    }
+    }*/
 
     return Container(
       margin: EdgeInsets.symmetric(
@@ -84,7 +80,7 @@ class TextMessage extends StatelessWidget {
     );
   }
 
-  Widget _linkPreview(
+  /*Widget _linkPreview(
     types.User user,
     double width,
     BuildContext context,
@@ -121,7 +117,7 @@ class TextMessage extends StatelessWidget {
       userAgent: userAgent,
       width: width,
     );
-  }
+  }*/
 
   void _onPreviewDataFetched(types.PreviewData previewData) {
     if (message.previewData == null) {
@@ -138,25 +134,19 @@ class TextMessage extends StatelessWidget {
     final bodyLinkTextStyle = user.id == message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageBodyLinkTextStyle
         : InheritedChatTheme.of(context).theme.receivedMessageBodyLinkTextStyle;
-    final bodyTextStyle = user.id == message.author.id
-        ? theme.sentMessageBodyTextStyle
-        : theme.receivedMessageBodyTextStyle;
-    final boldTextStyle = user.id == message.author.id
-        ? theme.sentMessageBodyBoldTextStyle
-        : theme.receivedMessageBodyBoldTextStyle;
-    final codeTextStyle = user.id == message.author.id
-        ? theme.sentMessageBodyCodeTextStyle
-        : theme.receivedMessageBodyCodeTextStyle;
-    final emojiTextStyle = user.id == message.author.id
-        ? theme.sentEmojiMessageTextStyle
-        : theme.receivedEmojiMessageTextStyle;
+    final bodyTextStyle =
+        user.id == message.author.id ? theme.sentMessageBodyTextStyle : theme.receivedMessageBodyTextStyle;
+    final boldTextStyle =
+        user.id == message.author.id ? theme.sentMessageBodyBoldTextStyle : theme.receivedMessageBodyBoldTextStyle;
+    final codeTextStyle =
+        user.id == message.author.id ? theme.sentMessageBodyCodeTextStyle : theme.receivedMessageBodyCodeTextStyle;
+    final emojiTextStyle =
+        user.id == message.author.id ? theme.sentEmojiMessageTextStyle : theme.receivedEmojiMessageTextStyle;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (showName)
-          nameBuilder?.call(message.author.id) ??
-              UserName(author: message.author),
+        if (showName) nameBuilder?.call(message.author.id) ?? UserName(author: message.author),
         if (enlargeEmojis)
           if (options.isTextSelectable)
             SelectableText(message.text, style: emojiTextStyle)
@@ -218,20 +208,7 @@ class TextMessageText extends StatelessWidget {
   Widget build(BuildContext context) => ParsedText(
         parse: [
           ...options.matchers,
-          MatchText(
-            onTap: (mail) async {
-              final url = Uri(scheme: 'mailto', path: mail);
-              if (await canLaunchUrl(url)) {
-                await launchUrl(url);
-              }
-            },
-            pattern: regexEmail,
-            style: bodyLinkTextStyle ??
-                bodyTextStyle.copyWith(
-                  decoration: TextDecoration.underline,
-                ),
-          ),
-          MatchText(
+          /*MatchText(
             onTap: (urlText) async {
               final protocolIdentifierRegex = RegExp(
                 r'^((http|ftp|https):\/\/)',
@@ -257,11 +234,10 @@ class TextMessageText extends StatelessWidget {
                 bodyTextStyle.copyWith(
                   decoration: TextDecoration.underline,
                 ),
-          ),
+          ),*/
           MatchText(
             pattern: PatternStyle.bold.pattern,
-            style: boldTextStyle ??
-                bodyTextStyle.merge(PatternStyle.bold.textStyle),
+            style: boldTextStyle ?? bodyTextStyle.merge(PatternStyle.bold.textStyle),
             renderText: ({required String str, required String pattern}) => {
               'display': str.replaceAll(
                 PatternStyle.bold.from,
@@ -291,8 +267,7 @@ class TextMessageText extends StatelessWidget {
           ),
           MatchText(
             pattern: PatternStyle.code.pattern,
-            style: codeTextStyle ??
-                bodyTextStyle.merge(PatternStyle.code.textStyle),
+            style: codeTextStyle ?? bodyTextStyle.merge(PatternStyle.code.textStyle),
             renderText: ({required String str, required String pattern}) => {
               'display': str.replaceAll(
                 PatternStyle.code.from,
